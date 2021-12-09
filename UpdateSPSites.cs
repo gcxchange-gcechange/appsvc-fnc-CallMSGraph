@@ -67,7 +67,7 @@ namespace appsvc_fnc_CallMSGraph
                     {
                         // SharePoint App only
                         ClientContext ctx = new PnP.Framework.AuthenticationManager().GetACSAppOnlyContext(siteURL, appOnlyId, appOnlySecret, AzureEnvironment.Production);
-                        log.LogInformation($"after apponly identification");
+                        log.LogInformation($"after apponly identification - {siteURL}");
 
                         Web web = ctx.Web;
 
