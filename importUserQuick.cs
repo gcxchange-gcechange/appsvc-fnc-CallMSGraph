@@ -94,28 +94,23 @@ namespace appsvc_fnc_CallMSGraph
                             {
                                 Id = userID
                             };
-
-                            await graphServiceClient.Groups[welcomeGroup].Members.References
+                            await graphServiceClient.Groups[CIOGroup].Members.References
                                 .Request()
                                 .AddAsync(directoryObject);
-                            log.LogInformation("User add to welcome group successfully");
+                            log.LogInformation("User add to CIO group group successfully");
                             await graphServiceClient.Groups[assignedGroupName].Members.References
                                 .Request()
                                 .AddAsync(directoryObject);
                             log.LogInformation("User add to GCX_Assigned group successfully");
-                            await graphServiceClient.Groups[CIOGroup].Members.References
+                            await graphServiceClient.Groups[welcomeGroup].Members.References
                                 .Request()
                                 .AddAsync(directoryObject);
-                            log.LogInformation("User add to GCX_Assigned group successfully");
-
-                         
+                            log.LogInformation("User add to welcome group successfully");
                         }
                         catch (Exception ex)
                         {
                             log.LogInformation($"Error adding User to groups : {ex.Message}");
                         }
-
-
                         log.LogInformation(@"User invite successfully - {userInvite.InvitedUser.Id}");
                     }
                     catch (ServiceException ex)
@@ -123,7 +118,6 @@ namespace appsvc_fnc_CallMSGraph
                         log.LogInformation($"Error Creating User Invite : {ex.Message}");
                     }
                 }
-
            return true;
         }
         public class Item
