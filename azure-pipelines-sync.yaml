@@ -4,7 +4,7 @@ trigger:
     - '*'
 
 pool:
-  vmImage: ubuntu-latest
+  name: TBS Self Hosted
 
 steps:
 - script: |
