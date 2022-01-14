@@ -4,7 +4,7 @@ trigger:
     - '*'
 
 pool:
-  name: TBS Self Hosted
+  name: TBS Linux Self Hosted
 
 steps:
 - script: |
