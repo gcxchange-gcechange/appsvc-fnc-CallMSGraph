@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace appsvc_fnc_CallMSGraph
 {
@@ -14,8 +15,8 @@ namespace appsvc_fnc_CallMSGraph
     {
         [FunctionName("UpdateTBSUsers")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+            //[HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req, ILogger log)
+            [TimerTrigger("0 0 1 * * *")] TimerInfo myTimer, ILogger log, HttpRequest req)
         {
 
             IConfiguration config = new ConfigurationBuilder()
@@ -40,7 +41,10 @@ namespace appsvc_fnc_CallMSGraph
 
         public static async Task<bool> CallMSFunction(GraphServiceClient graphServiceClient, string tbsgroup, string newdepartment, ILogger log)
         {
-            var groupMembers = await graphServiceClient.Groups[tbsgroup].Members.Request().GetAsync();
+            var groupMembers = await graphServiceClient.Groups[tbsgroup].Members.Request()
+                    .Header("ConsistencyLevel", "eventual")
+                    .Select("department,id,displayName")
+                    .GetAsync();
             var users = new List<Microsoft.Graph.User>(); 
             while (groupMembers.Count > 0) 
                 { 
@@ -56,11 +60,15 @@ namespace appsvc_fnc_CallMSGraph
                 }
 
                 foreach (var user in users) 
-                    { 
-                    user.Department = newdepartment; 
-                    await graphServiceClient.Users[user.Id].Request().UpdateAsync(user); 
-                    log.LogInformation($"Updated department for user {user.DisplayName}"); 
-                    }
+                {
+                    log.LogInformation(user.Department);
+                if (user.Department != newdepartment)
+                {
+                    user.Department = newdepartment;
+                    await graphServiceClient.Users[user.Id].Request().UpdateAsync(user);
+                    log.LogInformation($"Updated department for user {user.DisplayName}");
+                }
+            }
             return true;
         }
             
