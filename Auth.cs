@@ -8,6 +8,7 @@ using Microsoft.Identity.Client;
 using PnP.Framework.Diagnostics;
 using System;
 using System.Net.Http.Headers;
+using System.Net.Sockets;
 
 namespace appsvc_fnc_CallMSGraph
 {
@@ -43,7 +44,8 @@ namespace appsvc_fnc_CallMSGraph
             KeyVaultSecret secret = client.GetSecret(secretName);
             string clientSecret = secret.Value;
 
-
+            //for local testing only
+            //string clientSecret = config["clientSecret"];
 
             IConfidentialClientApplication confidentialClientApplication = ConfidentialClientApplicationBuilder
             .Create(clientId)
