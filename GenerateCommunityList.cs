@@ -97,11 +97,11 @@ namespace appsvc_fnc_CallMSGraph
             string storageAccountName = config["storageAccountName"];
             string containerName = config["containerName"];
             string containerEndpoint = string.Format("https://{0}.blob.core.windows.net/{1}", storageAccountName, containerName);
-            string filename = $"community_list_{DateTime.UtcNow.Ticks}.json";
+            string filename = $"community_list_{DateTime.Now.ToString("yyyy-MM-dd")}.json";
 
             BlobContainerClient containerClient = new BlobContainerClient(new Uri(containerEndpoint), new DefaultAzureCredential());
 
-            byte[] byteArray = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(communityList));
+            byte[] byteArray = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(communityList));
 
             try {
                 await containerClient.DeleteBlobIfExistsAsync(filename);
