@@ -14,9 +14,9 @@ namespace appsvc_fnc_CallMSGraph
     public static class UpdateTBSUsers
     {
         [FunctionName("UpdateTBSUsers")]
-        public static async Task<IActionResult> Run(
+        public static async Task Run(
             //[HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req, ILogger log)
-            [TimerTrigger("0 0 1 * * *")] TimerInfo myTimer, ILogger log, HttpRequest req)
+            [TimerTrigger("0 0 1 * * *")] TimerInfo myTimer, ILogger log)
         {
 
             IConfiguration config = new ConfigurationBuilder()
@@ -32,11 +32,6 @@ namespace appsvc_fnc_CallMSGraph
             var graphAPIAuth = auth.graphAuth(log);
             var result = await CallMSFunction(graphAPIAuth, tbsgroup, newdepartment, log);
            
-            string responseMessage = result
-                ? "Work as it should"
-                : $"Something went wrong. Check the logs";
-
-            return new OkObjectResult(responseMessage);
         }
 
         public static async Task<bool> CallMSFunction(GraphServiceClient graphServiceClient, string tbsgroup, string newdepartment, ILogger log)
