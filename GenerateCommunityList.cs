@@ -58,7 +58,7 @@ namespace appsvc_fnc_CallMSGraph
             Owner owner;
 
             try {
-                var groups = await graphServiceClient.Groups.Request(new List<QueryOption>() { new QueryOption("$count", "true") }).Header("ConsistencyLevel", "eventual").Filter("groupTypes/any(c:c eq 'Unified')").OrderBy("displayName asc").GetAsync();
+                var groups = await graphServiceClient.Groups.Request(new List<QueryOption>() { new QueryOption("$count", "true") }).Header("ConsistencyLevel", "eventual").Filter("groupTypes/any(c:c eq 'Unified')").OrderBy("displayName asc").Top(999).GetAsync();
                 
 
                 foreach (var group in groups)
