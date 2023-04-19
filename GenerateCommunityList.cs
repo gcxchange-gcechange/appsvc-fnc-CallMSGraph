@@ -59,18 +59,7 @@ namespace appsvc_fnc_CallMSGraph
 
             try {
                 var groups = await graphServiceClient.Groups.Request(new List<QueryOption>() { new QueryOption("$count", "true") }).Header("ConsistencyLevel", "eventual").Filter("groupTypes/any(c:c eq 'Unified')").OrderBy("displayName asc").GetAsync();
-                while (true)
-                {
-                    // If the page is the last one
-                    if (groups.NextPageRequest is null)
-                        break;
-
-                    // Read the next page
-                    groups = await groups
-                      .NextPageRequest
-                      .GetAsync()
-                      .ConfigureAwait(false);
-                }
+                
 
                 foreach (var group in groups)
                 {
@@ -89,6 +78,7 @@ namespace appsvc_fnc_CallMSGraph
 
                     communityList.Add(community);
                 }
+                while (groups.NextPageRequest != null && (groups = await groups.NextPageRequest.GetAsync()).Count > 0) ;
             }
             catch (Exception e) {
                 log.LogError($"Message: {e.Message}");
